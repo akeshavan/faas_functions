@@ -1,0 +1,11 @@
+build
+template/csharp/
+template/go-armhf/
+template/go/
+template/node-arm64/
+template/node-armhf/
+template/node/
+template/python-armhf/
+template/python/
+template/python3/
+template/ruby/

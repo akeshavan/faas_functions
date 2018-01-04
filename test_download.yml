@@ -1,0 +1,13 @@
+provider:
+  name: faas
+  gateway: http://localhost:8080
+
+functions:
+  test_download18:
+    lang: pyconda
+    handler: ./test_download
+    image: test_download
+    environment:
+      read_timeout: 1065 # seconds
+      write_timeout: 1065 # seconds
+      exec_timeout: 0 # disable

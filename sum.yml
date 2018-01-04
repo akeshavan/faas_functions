@@ -3,7 +3,7 @@ provider:
   gateway: http://localhost:8080
 
 functions:
-  zeros:
+  sum:
     lang: pyconda
-    handler: ./zeros
-    image: akeshavan/faas_zeros
+    handler: ./sum
+    image: akeshavan/faas_sum
