@@ -9,6 +9,7 @@ matplotlib.use("agg")
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import cm
 import base64
+import numpy as np
 
 # The output we'll print will go here
 full_output = {"log": [],

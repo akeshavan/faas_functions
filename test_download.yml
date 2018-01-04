@@ -3,7 +3,7 @@ provider:
   gateway: http://localhost:8080
 
 functions:
-  test_download18:
+  test_download20:
     lang: pyconda
     handler: ./test_download
     image: test_download
