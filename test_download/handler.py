@@ -131,4 +131,4 @@ def handle(st):
     except Exception as e:
         full_output["log"].append(e)
 
-    print(full_output)
+    print(json.dumps(full_output))
