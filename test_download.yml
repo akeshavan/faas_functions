@@ -3,10 +3,10 @@ provider:
   gateway: http://localhost:8080
 
 functions:
-  test_download21:
+  create_slices:
     lang: pyconda
     handler: ./test_download
-    image: test_download
+    image: akeshavan/tilefunc
     environment:
       read_timeout: 1065 # seconds
       write_timeout: 1065 # seconds
