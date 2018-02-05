@@ -1,0 +1,9 @@
+provider:
+  name: faas
+  gateway: http://localhost:8080
+
+functions:
+  braindr00:
+    lang: pycondatf
+    handler: ./braindr00
+    image: braindr00

@@ -1,0 +1,1 @@
+git+git://github.com/akeshavan/keras.git # my version can load models fit on old keras version
