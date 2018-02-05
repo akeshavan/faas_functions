@@ -75,7 +75,7 @@ def make_mask_dict(tile_data):
 
 
 def create_tiles(base_file, mask_file=None, slice_direction="ax",
-                 mask_threshold=8000):
+                 mask_threshold=8000, max_num_tiles=None):
 
     # Make sure our slice direction is valid
     slicer = {"ax": 0, "cor": 1, "sag": 2}
@@ -104,6 +104,8 @@ def create_tiles(base_file, mask_file=None, slice_direction="ax",
     num_slices = base.shape[slicer[slice_direction]]
     full_output["log"].append("Total number of slices in {} direction: {}".format(slice_direction, num_slices))
 
+    tile_count = 0
+
     for slice_num in range(num_slices):
         all_data_slicer[slicer[slice_direction]] = slice_num
         mask_tile = mask[all_data_slicer] > 0
@@ -119,6 +121,10 @@ def create_tiles(base_file, mask_file=None, slice_direction="ax",
                 output_tile["mask"] = mask_dict
 
             full_output["data"].append(output_tile)
+            tile_count += 1
+            if max_num_tiles:
+                if tile_count > max_num_tiles:
+                    break
 
     return full_output
 
