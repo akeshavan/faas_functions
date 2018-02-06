@@ -30,7 +30,7 @@ def reshape(data, n=256):
 
 
 def rgb2gray(rgb):
-    return np.dot(rgb[...,:3], [0.299, 0.587, 0.114])
+    return np.dot(rgb[...,:3], [0.299, 0.587, 0.114])/255.
 
 
 def load_model(**kwargs):

@@ -6,4 +6,4 @@ functions:
   braindr00:
     lang: pycondatf
     handler: ./braindr00
-    image: braindr00
+    image: akeshavan/braindr00:v0.0
