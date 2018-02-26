@@ -3,11 +3,13 @@ provider:
   gateway: http://localhost:8080
 
 functions:
-  create_slices:
+  get_truth_labels:
     lang: pyconda
-    handler: ./test_download
-    image: akeshavan/tilefunc
+    handler: ./get-truth-labels
+    image: get_truth_labels
     environment:
+      write_debug: true
+      read_debug: true
       read_timeout: 1065 # seconds
       write_timeout: 1065 # seconds
       exec_timeout: 0 # disable

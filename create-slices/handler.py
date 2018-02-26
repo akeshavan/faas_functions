@@ -13,7 +13,8 @@ import numpy as np
 
 # The output we'll print will go here
 full_output = {"log": [],
-               "data": []}
+               "data": [],
+               "affine": []}
 
 
 def download_image(inp, out):
@@ -103,6 +104,7 @@ def create_tiles(base_file, mask_file=None, slice_direction="ax",
 
     num_slices = base.shape[slicer[slice_direction]]
     full_output["log"].append("Total number of slices in {} direction: {}".format(slice_direction, num_slices))
+    full_output["affine"] = base_aff.tolist()
 
     tile_count = 0
 

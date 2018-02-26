@@ -3,13 +3,11 @@ provider:
   gateway: http://localhost:8080
 
 functions:
-  braindr00:
-    lang: pycondatf
-    handler: ./braindr00
-    image: akeshavan/braindr00:v0.0
+  create-slices:
+    lang: pyconda
+    handler: ./create-slices
+    image: akeshavan/tilefunc
     environment:
-      write_debug: true
-      read_debug: true
       read_timeout: 1065 # seconds
       write_timeout: 1065 # seconds
       exec_timeout: 0 # disable
