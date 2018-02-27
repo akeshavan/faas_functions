@@ -3,10 +3,10 @@ provider:
   gateway: http://localhost:8080
 
 functions:
-  get_truth_labels:
+  get-truth-labels:
     lang: pyconda
     handler: ./get-truth-labels
-    image: get_truth_labels
+    image: akeshavan/get-truth-labels
     environment:
       write_debug: true
       read_debug: true

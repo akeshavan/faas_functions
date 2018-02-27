@@ -74,8 +74,8 @@ def main(input_data, truth_users):
     # filter them out from the fails
     fails = fails[~fails['name'].isin(not_including)]
 
-    ak_pass = passes[passes.checkedBy.isin(truth_users)]
-    ak_fail = fails[fails.checkedBy.isin(truth_users)]
+    ak_pass = passes[passes.checkedBy.isin(truth_users)]['name'].values
+    ak_fail = fails[fails.checkedBy.isin(truth_users)]['name'].values
     ak_N = min(ak_pass.shape[0], ak_fail.shape[0])
 
     log['truth_passes_shape'] = ak_pass.shape
@@ -87,8 +87,8 @@ def main(input_data, truth_users):
     np.random.shuffle(idx)
     ak_pass_subset = ak_pass.iloc[idx[:ak_N]]
 
-    passing_names = ak_pass_subset['name'].values
-    failing_names = ak_fail['name'].values
+    passing_names = ak_pass_subset # ['name'].values
+    failing_names = ak_fail # ['name'].values
 
     log['passing_names'] = passing_names.tolist()
     log['failing_names'] = failing_names.tolist()
