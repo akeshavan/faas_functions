@@ -92,7 +92,7 @@ def main(input_data, truth_users):
 
     log['passing_names'] = passing_names.tolist()
     log['failing_names'] = failing_names.tolist()
-
+    log['tidy_df'] = mind_df_tidy
     return log
 
 
