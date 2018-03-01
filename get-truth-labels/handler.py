@@ -52,6 +52,7 @@ def main(input_data, truth_users):
     mind_df = pd.DataFrame(data)
     mind_df = mind_df[mind_df.entry_type == 'T1w']
     mind_df_tidy = tidy_df(mind_df)
+    log['tidy_df'] = mind_df_tidy.to_json()
 
     passes = mind_df_tidy[mind_df_tidy.score >= 4]
     fails = mind_df_tidy[mind_df_tidy.score <= -4]
@@ -74,8 +75,8 @@ def main(input_data, truth_users):
     # filter them out from the fails
     fails = fails[~fails['name'].isin(not_including)]
 
-    ak_pass = passes[passes.checkedBy.isin(truth_users)]['name'].values
-    ak_fail = fails[fails.checkedBy.isin(truth_users)]['name'].values
+    ak_pass = passes[passes.checkedBy.isin(truth_users)]  # ['name'].values
+    ak_fail = fails[fails.checkedBy.isin(truth_users)]  # ['name'].values
     ak_N = min(ak_pass.shape[0], ak_fail.shape[0])
 
     log['truth_passes_shape'] = ak_pass.shape
@@ -87,12 +88,12 @@ def main(input_data, truth_users):
     np.random.shuffle(idx)
     ak_pass_subset = ak_pass.iloc[idx[:ak_N]]
 
-    passing_names = ak_pass_subset # ['name'].values
-    failing_names = ak_fail # ['name'].values
+    passing_names = ak_pass_subset['name'].values
+    failing_names = ak_fail['name'].values
 
     log['passing_names'] = passing_names.tolist()
     log['failing_names'] = failing_names.tolist()
-    log['tidy_df'] = mind_df_tidy
+
     return log
 
 

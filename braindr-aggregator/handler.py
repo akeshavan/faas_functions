@@ -14,7 +14,8 @@ from sklearn.model_selection import StratifiedKFold
 
 log = {}
 
-def model(bdr_pivot):
+def model(bdr_pivot, learning_rates=[0.1], n_estimators=[200], max_depth=[2],
+          test_size=0.33):
     # bdr_pivot = pd.DataFrame(braindr_pivot)
     X = bdr_pivot[[c for c in bdr_pivot.columns if c not in ['plain_average', 'truth']]].values
     y = bdr_pivot.truth.values
@@ -22,12 +23,12 @@ def model(bdr_pivot):
     log['y_shape'] = y.shape
 
     seed = 7
-    test_size = 0.33
+    # test_size = 0.33
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size,
                                                         random_state=seed,
                                                         stratify=y)
-
+    log['X_train_shape'] = X_train.shape
     # make sure everyone has a vote in the train and test
     assert(np.isfinite(X_train).sum(0).all())
     assert(np.isfinite(X_test).sum(0).all())
@@ -35,12 +36,12 @@ def model(bdr_pivot):
     model = XGBClassifier()
 
     # parameters to tune
-    learning_rate = [0.1]
-    n_estimators = [200]
-    max_depth = [2]  # , 6, 8]
+    # learning_rate = [0.1]
+    # n_estimators = [200]
+    # max_depth = [2]  # , 6, 8]
 
     # run the grid search
-    param_grid = dict(learning_rate=learning_rate,
+    param_grid = dict(learning_rate=learning_rates,
                       max_depth=max_depth,
                       n_estimators=n_estimators)
     kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=seed)
@@ -49,12 +50,12 @@ def model(bdr_pivot):
     grid_result = grid_search.fit(X_train, y_train)
 
     # results
-    #log["Best: %f using %s"] = (grid_result.best_score_,
-    #                            grid_result.best_params_)
+    log["Best: %f using %s"] = (grid_result.best_score_,
+                                grid_result.best_params_)
     means = grid_result.cv_results_['mean_test_score']
     stds = grid_result.cv_results_['std_test_score']
     params = grid_result.cv_results_['params']
-    #for mean, stdev, param in zip(means, stds, params):
+    # for mean, stdev, param in zip(means, stds, params):
     #    log["%f (%f) with: %r"] = (mean, stdev, param)
 
     # make predictions for test data
@@ -63,7 +64,7 @@ def model(bdr_pivot):
     predictions = [round(value) for value in y_pred]
     # evaluate predictions
     accuracy = accuracy_score(y_test, predictions)
-    #log["Accuracy: %.2f%%"] = (accuracy * 100.0)
+    # log["Accuracy: %.2f%%"] = (accuracy * 100.0)
 
     y_pred_prob = grid_result.predict_proba(X_test)[:, 1]
     log['y_pred_prob'] = y_pred_prob.tolist()
@@ -72,14 +73,16 @@ def model(bdr_pivot):
     B = grid_result.best_estimator_.get_booster()
     fscores = B.get_fscore()
     fdf = pd.DataFrame([fscores]).T.rename(columns={0: 'F'})
-    users = [c for c in bdr_pivot.columns if c not in ['plain_average', 'truth']] # bdr_pivot.columns[:-2]
+    not_col = ['plain_average', 'truth']
+    users = [c for c in bdr_pivot.columns if c not in not_col]
     fdf['user'] = fdf.index.map(lambda x: users[int(x[1:])])
     fdf.sort_values('F', inplace=True)
     log['user_importance'] = fdf[::-1].to_json(orient='records')
     return grid_result
 
 
-def main(braindr_data, pass_labels, fail_labels):
+def main(braindr_data, pass_labels, fail_labels, learning_rates=[0.1],
+         n_estimators=[200], max_depth=[2], test_size=0.33):
     if braindr_data.startswith('http'):
         braindr_df = pd.read_csv(braindr_data)
     else:
@@ -119,9 +122,12 @@ def main(braindr_data, pass_labels, fail_labels):
     bdr_pivot['plain_average'] = plain_avg
     log['bdr_pivot'] = bdr_pivot.to_json(orient='columns')
 
-    grid_result = model(bdr_pivot)
+    grid_result = model(bdr_pivot, learning_rates=learning_rates,
+                        n_estimators=n_estimators, max_depth=max_depth,
+                        test_size=test_size)
 
-    modelUsers = [c for c in bdr_pivot.columns if c not in ['plain_average', 'truth']]
+    modelUsers = [c for c in bdr_pivot.columns if c not in ['plain_average',
+                                                            'truth']]
     braindr_full_pivot = braindr_df[braindr_df.username.isin(modelUsers)]\
     .pivot_table(columns='username', index='image_id',
                  values='vote', aggfunc=np.mean)
@@ -134,10 +140,10 @@ def main(braindr_data, pass_labels, fail_labels):
 
     plain_avg = braindr_full_pivot.mean(1)
     braindr_full_pivot['average_label'] = plain_avg
-    braindr_full_pivot['xgboost_label'] = y_all_pred[:,1]
+    braindr_full_pivot['xgboost_label'] = y_all_pred[:, 1]
 
     log['output'] = braindr_full_pivot.to_json(orient='columns')
-    return log # braindr_full_pivot.to_json(orient='columns')
+    return log  # braindr_full_pivot.to_json(orient='columns')
 
 
 def handle(st):

@@ -6,7 +6,7 @@ functions:
   get-truth-labels:
     lang: pyconda
     handler: ./get-truth-labels
-    image: akeshavan/get-truth-labels
+    image: akeshavan/get-truth-labels:v0.2
     environment:
       write_debug: true
       read_debug: true

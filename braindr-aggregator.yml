@@ -6,7 +6,7 @@ functions:
   braindr-aggregator:
     lang: pyconda3xg
     handler: ./braindr-aggregator
-    image: akeshavan/braindr-aggregator:v0.0
+    image: akeshavan/braindr-aggregator:v0.3
     environment:
       write_debug: true
       read_debug: true
