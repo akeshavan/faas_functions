@@ -41,7 +41,7 @@ def tidy_df(mind_df):
 
 
 
-def main(input_data, truth_users):
+def main(input_data, truth_users, threshold=4):
     if input_data.startswith('http'):
         mc_file = download_image(input_data, 'mindcontrol_data.json')
         with open(mc_file, 'r') as f:
@@ -54,8 +54,8 @@ def main(input_data, truth_users):
     mind_df_tidy = tidy_df(mind_df)
     log['tidy_df'] = mind_df_tidy.to_json()
 
-    passes = mind_df_tidy[mind_df_tidy.score >= 4]
-    fails = mind_df_tidy[mind_df_tidy.score <= -4]
+    passes = mind_df_tidy[mind_df_tidy.score >= threshold]
+    fails = mind_df_tidy[mind_df_tidy.score <= -threshold]
 
     log['passes_shape'] = passes.shape
     log['fails_shape'] = fails.shape
