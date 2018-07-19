@@ -1,0 +1,13 @@
+provider:
+  name: faas
+  gateway: http://localhost:8080
+
+functions:
+  appstract:
+    lang: pyconda3
+    handler: ./appstract
+    image: appstract
+    environment:
+      read_timeout: 1065 # seconds
+      write_timeout: 1065 # seconds
+      exec_timeout: 0 # disable
